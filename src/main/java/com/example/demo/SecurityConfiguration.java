@@ -35,7 +35,7 @@ public class SecurityConfiguration extends  WebSecurityConfigurerAdapter
                         new AntPathRequestMatcher("/logout"))
                 .logoutSuccessUrl("/login").permitAll();
     }
-    @Override
+    @Override 
     protected void configure (AuthenticationManagerBuilder auth )
     throws Exception{
         auth.inMemoryAuthentication()
