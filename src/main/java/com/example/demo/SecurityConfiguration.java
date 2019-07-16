@@ -9,6 +9,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
@@ -20,17 +22,26 @@ public class SecurityConfiguration extends  WebSecurityConfigurerAdapter
     }
     @Override
     protected void configure (HttpSecurity http) throws Exception {
-        http
-                .authorizeRequests()
+        http.authorizeRequests()
+                .antMatchers("/")
+                .access("hasAnyAuthority('USER','ADMIN')")
+                .antMatchers("/admin").access("hasAuthority('ADMIN')")
                 .anyRequest().authenticated()
                 .and()
-                .formLogin();
+                .formLogin().loginPage("/login").permitAll()
+                .and()
+                .logout()
+                .logoutRequestMatcher(
+                        new AntPathRequestMatcher("/logout"))
+                .logoutSuccessUrl("/login").permitAll();
     }
     @Override
     protected void configure (AuthenticationManagerBuilder auth )
     throws Exception{
-        auth.inMemoryAuthentication().withUser("user")
-                .password((passwordEncoder().encode("password" )))
-                .authorities(("USER"));
+        auth.inMemoryAuthentication()
+                .withUser("dave").password(passwordEncoder().encode("begreat")).authorities("ADMIN")
+
+                .and()
+                .withUser("user").password(passwordEncoder().encode("password")).authorities("USER");
     }
 }
