@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" >
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <div th:replace="base :: nav"></div>
+
+</head>
+<body>
+<div class="container">
+    <form action="#" method="post" th:action="@{/process}"
+          th:object="${course}">
+        <input th:field="*{id}" type="hidden"/>
+
+        Title: <input th:field="*{title}" type="text"/>
+        <span th:errors="*{title}" th:if="${#fields.hasErrors('title')}"></span><br/>
+
+        Instructor:
+        <select name="instructor" id="instructor" class="custom-select" th:field="*{instructor}">
+            <option value="">Select Instructor</option>
+            <option th:each="instruct : ${instructors}"
+                    th:value="${instruct.id}"
+                    th:text="${instruct.name}"/>
+        </select><br/>
+
+
+        Description: <input th:field="*{description}" type="text"/>
+        <span th:errors="*{description}" th:if="${#fields.hasErrors('description')}"></span><br/>
+
+        Credits: <input th:field="*{credit}" type="text"/>
+        <span th:errors="*{credit}" th:if="${#fields.hasErrors('credit')}"></span><br/>
+
+        <input type="submit" value="Submit"/>
+    </form>
+
+
+    </form>
+</div>
+</body>
+</html>

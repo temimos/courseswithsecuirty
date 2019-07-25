@@ -5,7 +5,7 @@ package com.example.demo;
         import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
         import javax.annotation.Generated;
-        import javax.management.relation.Role;
+
         import javax.persistence.*;
         import java.util.Collection;
 
@@ -27,7 +27,7 @@ public class User {
     private String lastName;
 
     @Column (name = "enabled")
-    private String enabled;
+    private boolean enabled;
 
     @Column (name = "username")
     private String username;
@@ -92,11 +92,11 @@ public class User {
         this.lastName = lastName;
     }
 
-    public String getEnabled() {
+    public boolean getEnabled() {
         return enabled;
     }
 
-    public void setEnabled(String enabled) {
+    public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
 

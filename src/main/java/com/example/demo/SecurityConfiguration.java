@@ -19,24 +19,24 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 public class SecurityConfiguration extends  WebSecurityConfigurerAdapter
 {
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public BCryptPasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
     }
     @Autowired
     private SSUserDetailsService userDetailsService;
     @Autowired
-    private userRepository appUserRepository;
+    private UserRepository userRepository;
     @Override
-    public UserDetailsService 0userDetailsServiceBean() throws
+    public UserDetailsService userDetailsServiceBean() throws
             Exception {
-        return new SSUserDetailsService(appUserRepository);
+        return new SSUserDetailsService(userRepository);
     }
 
     @Override
     protected void configure (HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/","h2-console/**").permitAll()
+                .antMatchers("/","h2-console/**", "/register").permitAll()
                 .antMatchers("/").access("hasAnyAuthority('USER','ADMIN')")
                 .antMatchers("/admin").access("hasAuthority('ADMIN')")
                 .anyRequest().authenticated()
@@ -47,14 +47,19 @@ public class SecurityConfiguration extends  WebSecurityConfigurerAdapter
                 .logoutSuccessUrl("/login").permitAll().permitAll()
                 .and()
                 .httpBasic();
-        http.csrf().disable();
-        http.headers().frameOptions().disable();
+        http
+                .csrf().disable();
+        http
+                .headers().frameOptions().disable();
     }
     @Override
     protected void configure (AuthenticationManagerBuilder auth )
     throws Exception{
-        auth.userDetailsService(userDetailsServiceBean())
 
-                .passwordEncoder(passwordEncoder());
+        auth.userDetailsService(userDetailsServiceBean()).passwordEncoder(passwordEncoder());
+//                .withUser("dave").password((passwordEncoder().encode("begreat")).authorities("ADMIN")
+//                .and()
+//                .withUser("user").password(passwordEncoder().encode("password")).authorities("USER").and(),passwordEncoder(encoder());
     }
 }
+
